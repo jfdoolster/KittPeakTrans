@@ -25,7 +25,7 @@ from scipy.constants import *
 FULL = pd.read_csv('KittPeak.csv',sep=',')
 
 
-def PlotEm(name='Wavelength',RANGE=[1.5,1.8]):
+def PlotEm(name='Wavelength',RANGE=[0.5,2.5]):
 
 	if name in list(FULL):
 		if name == 'Wavelength':
@@ -39,7 +39,11 @@ def PlotEm(name='Wavelength',RANGE=[1.5,1.8]):
 
 		NEW = FULL.loc[(FULL[name] >= RANGE[0]) & (FULL[name] <= RANGE[1])]
 
+		plt.grid(True)
 		plt.plot(NEW[name],NEW['Transmission'],linewidth=0.1)
+		plt.ylabel(r'Transmission')
+		plt.xlabel(r'Wavelength [$\mu$m]')
+		plt.xlim((RANGE[0],RANGE[1]))
 		plt.show()
 
 	else:
