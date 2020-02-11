@@ -17,10 +17,9 @@ def CreateCSV():
 	ascii.write(df2,'OriginalData/TransData_05_1.csv',overwrite=True)
 
 	# download to pandas dataframes. Not efficient but whatever
-	LongWave  = pd.read_csv('TransData_1_5.csv',sep=' ')
-	ShortWave = pd.read_csv('TransData_05_1.csv',sep=' ')
+	LongWave  = pd.read_csv('OriginalData/TransData_1_5.csv',sep=' ')
+	ShortWave = pd.read_csv('OriginalData/TransData_05_1.csv',sep=' ')
 
-<<<<<<< HEAD
 	# combine into single dataframe with wavelength and frequency
 	FULL = pd.concat([LongWave,ShortWave],ignore_index=True)
 	FULL['Wavelength'] = [10**4/x for x in FULL['Wavenumber']]
@@ -34,74 +33,43 @@ def CreateCSV():
 	FULL.to_csv('ProcessedData/KittPeak.csv',index=False)
 
 	# save to pkl becuase faster
-	FULL.to_pkl('ProcessedData/KittPeak.pkl')
-CreateCSV()
+	FULL.to_pickle('ProcessedData/KittPeak.pkl')
 
 # 'Photometric J and H near-IR Bands'#
-def PlotEm(name='Wavelength',RANGE=[1.2,1.8],TIT='PARVI Bandwidth'):
+def TransmissionPlot(name='Wavelength',RANGE=[0.5,2.5],TITLE='MROI Bandwidth'):
 
-	# pull pkl dataset
-	FULL = pd.read_pkl('ProcessedData/KittPeak.pkl')
-=======
-def PlotEm(name='Wavelength',RANGE=[0.5,2.5]):
->>>>>>> 1a319983a05a5bb69f360a36fd6e7ecd5463d29e
+	FULL = pd.read_pickle('ProcessedData/KittPeak.pkl')
+	print(FULL)
 
-	if name in list(FULL):
+	if name in list(FULL): # make sure requested name is in columns
 		if name == 'Wavelength':
-			unit = r'$\mu$m'
+			unit = r'$\mu$m' # units of wavelength
 		if name == 'Wavenumber':
-			unit = r'cm$^{-1}$'
-			RANGE = [10**4/x for x in (RANGE[1],RANGE[0]) ]
+			unit = r'cm$^{-1}$' # standard units of wavenumber
+			RANGE = [10**4/x for x in (RANGE[1],RANGE[0])]
 		if name == 'Frequency':
 			unit = 'Hz'
-			RANGE = [c/(x*10**-6) for x in (RANGE[1],RANGE[0]) ]
+			RANGE = [c/(x*10**-6) for x in (RANGE[1],RANGE[0])]
 
 		NEW = FULL.loc[(FULL[name] >= RANGE[0]) & (FULL[name] <= RANGE[1])]
 
-<<<<<<< HEAD
 		fig = plt.figure()
-		fig.set_size_inches = (12,8)
+		fig.set_size_inches(14,6)
 
-		plt.plot(NEW[name],NEW['Transmission'],linewidth=0.3)
+		plt.plot(NEW[name],NEW['Transmission'],linewidth=0.1,label='Data')
 
-		plt.ylabel('Transmission',fontsize=14)
-		plt.xlabel(r'%s [%s]' % (name,unit),fontsize=14)
-		plt.title(TIT,fontsize=20)
+		plt.ylabel('Transmission',fontsize=12)
+		plt.xlabel(r'%s [%s]' % (name,unit),fontsize=12)
+		plt.xlim((RANGE[0],RANGE[1]))
+		plt.title(TITLE,fontsize=14)
 
 		plt.grid(True)
 		plt.tight_layout()
 
-		if True:
-			deg  = 2
-			beta = np.polyfit(NEW[name],NEW['Transmission'],deg)
-			yhat = []
-			for x in NEW[name]:
-				hat  = 0
-				order = copy.deepcopy(deg)
-				for d in range(deg):
-					print(d)
-					print(order,'\n')
-					hat += beta[d] * x ** order
-					order -= 1
-					quit()
-				yhat.append(hat)
-
-			plt.plot(NEW[name],yhat)
-
-=======
-		plt.grid(True)
-		plt.plot(NEW[name],NEW['Transmission'],linewidth=0.1)
-		plt.ylabel(r'Transmission')
-		plt.xlabel(r'Wavelength [$\mu$m]')
-		plt.xlim((RANGE[0],RANGE[1]))
-		plt.show()
->>>>>>> 1a319983a05a5bb69f360a36fd6e7ecd5463d29e
-
 	else:
 		print('Check Spelling er something.')
 
-PlotEm('Wavelength',RANGE=[0.9,2.5],TIT='Near-IR')
-#PlotEm('Wavelength',RANGE=[0.5,0.8],TIT='Visible')
+TransmissionPlot('Wavelength')
 
 plt.show()
 
