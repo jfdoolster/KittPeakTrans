@@ -1,20 +1,23 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+"""
+docstring
+"""
+
 import copy
-from astropy.io import ascii
+import pandas as pd
+import matplotlib.pyplot as plt
+from astropy import io
 from scipy.constants import *
 
 
 def CreateCSV():
 	# read the downloaded files
 	# ftp://ftp.noao.edu/catalogs/atmospheric_transmission/
-	df1 = ascii.read('OriginalData/transdata_1_5_mic',names=['Wavenumber','Transmission'])
-	df2 = ascii.read('OriginalData/transdata_0.5_1_mic', names=['Wavenumber','Transmission'])
+	df1 = io.ascii.read('OriginalData/transdata_1_5_mic',names=['Wavenumber','Transmission'])
+	df2 = io.ascii.read('OriginalData/transdata_0.5_1_mic', names=['Wavenumber','Transmission'])
 
 	# convert to csvs
-	ascii.write(df1,'OriginalData/TransData_1_5.csv',overwrite=True)
-	ascii.write(df2,'OriginalData/TransData_05_1.csv',overwrite=True)
+	io.ascii.write(df1,'OriginalData/TransData_1_5.csv',overwrite=True)
+	io.ascii.write(df2,'OriginalData/TransData_05_1.csv',overwrite=True)
 
 	# download to pandas dataframes. Not efficient but whatever
 	LongWave  = pd.read_csv('OriginalData/TransData_1_5.csv',sep=' ')
@@ -35,7 +38,7 @@ def CreateCSV():
 	# save to pkl becuase faster
 	FULL.to_pickle('ProcessedData/KittPeak.pkl')
 
-# 'Photometric J and H near-IR Bands'#
+	# 'Photometric J and H near-IR Bands'#
 def TransmissionPlot(name='Wavelength',RANGE=[0.5,2.5],TITLE='MROI Bandwidth'):
 
 	FULL = pd.read_pickle('ProcessedData/KittPeak.pkl')
