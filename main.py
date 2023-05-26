@@ -56,4 +56,3 @@ if __name__ == "__main__":
     plt.grid(True)
     plt.tight_layout()
     plt.savefig('plots/wavelength_3_5-4_5.png', transparent=True)
-
