@@ -6,6 +6,11 @@ import os
 import pandas as pd
 from scipy.constants import speed_of_light as c
 
+dir_pkl = 'data'
+path_pkl_short = os.path.join(dir_pkl, 'df_short.pkl')
+path_pkl_long = os.path.join(dir_pkl, 'df_long.pkl')
+path_pkl_full = os.path.join(dir_pkl, 'df_full.pkl')
+
 def read_split_file(file: str, encoding="utf-8", sep=' '):
     """
     creat plain text file
@@ -39,44 +44,46 @@ def calc_wavelength_frequency(df0: pd.DataFrame):
 
     return df0.sort_values(by='Wavelength [um]')
 
+def create_kittpeak_pkls():
+    """
+    make pkls
+    """
+    tbl_short = read_split_file('original_data/transdata_0.5_1_mic', \
+        encoding='ascii', sep=' ')
+    tbl_long = read_split_file('original_data/transdata_1_5_mic', \
+        encoding='ascii', sep=' ')
+
+    df_short = table2dataframe(tbl_short, dtype=float, \
+        columns=['Wavenumber [1/cm]', 'Transmission'])
+    df_long  = table2dataframe(tbl_long, dtype=float, \
+        columns=['Wavenumber [1/cm]', 'Transmission'])
+
+    df_short = calc_wavelength_frequency(df_short)
+    df_long = calc_wavelength_frequency(df_long)
+
+    df_full = pd.concat([df_short, df_long], ignore_index=True)\
+        .sort_values(by='Wavelength [um]')
+
+    df_short.to_pickle(path_pkl_short)
+    df_long.to_pickle(path_pkl_long)
+    df_full.to_pickle(path_pkl_full)
+
+
 def proccess_kittpeak_data():
     """
     create dataframes and pkls
     """
-
-    path_pkl_short = os.path.join('data', 'df_short.pkl')
-    path_pkl_long = os.path.join('data', 'df_long.pkl')
-    path_pkl_full = os.path.join('data', 'df_full.pkl')
-
     boolgate = True
-    if not os.path.exists('data/'):
+    if not os.path.exists('data'):
         boolgate=False
-        os.makedirs('data/')
+        os.makedirs('data')
     else:
         boolgate &= (os.path.exists(path_pkl_short))
         boolgate &= (os.path.exists(path_pkl_long))
         boolgate &= (os.path.exists(path_pkl_full))
 
     if not boolgate:
-        tbl_short = read_split_file('original_data/transdata_0.5_1_mic', \
-            encoding='ascii', sep=' ')
-        tbl_long = read_split_file('original_data/transdata_1_5_mic', \
-            encoding='ascii', sep=' ')
-
-        df_short = table2dataframe(tbl_short, dtype=float, \
-            columns=['Wavenumber [1/cm]', 'Transmission'])
-        df_long  = table2dataframe(tbl_long, dtype=float, \
-            columns=['Wavenumber [1/cm]', 'Transmission'])
-
-        df_short = calc_wavelength_frequency(df_short)
-        df_long = calc_wavelength_frequency(df_long)
-
-        df_full = pd.concat([df_short, df_long], ignore_index=True)\
-            .sort_values(by='Wavelength [um]')
-
-        df_short.to_pickle(path_pkl_short)
-        df_long.to_pickle(path_pkl_long)
-        df_full.to_pickle(path_pkl_full)
+        create_kittpeak_pkls()
 
     df_short = pd.read_pickle(path_pkl_short)
     df_long = pd.read_pickle(path_pkl_long)

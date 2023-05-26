@@ -1,5 +1,6 @@
 __pycache__
-KittPeak.py
 data/
 plots/
+build/
 *.csv
+*.pkl
