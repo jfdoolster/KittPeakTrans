@@ -1,0 +1,5 @@
+__pycache__
+KittPeak.py
+data/
+plots/
+*.csv
