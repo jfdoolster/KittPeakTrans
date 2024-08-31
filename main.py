@@ -14,7 +14,7 @@ mpl.rcParams['xtick.color'] = COLOR
 mpl.rcParams['ytick.color'] = COLOR
 mpl.rcParams['figure.figsize'] = (24,6)
 mpl.rcParams['lines.linewidth'] = 1.0
-mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=['purple', 'g', 'r', 'c', 'm', 'y', 'k'])
+#mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=['purple', 'g', 'r', 'c', 'm', 'y', 'k'])
 
 if __name__ == "__main__":
 
@@ -56,3 +56,15 @@ if __name__ == "__main__":
     plt.grid(True)
     plt.tight_layout()
     plt.savefig('plots/wavelength_3_5-4_5.png', transparent=True)
+
+    plt.close('all')
+
+    print('creating plots/wavelength_sif.png ...')
+    fig = plt.figure()
+    plt.plot(df_full['Wavelength [um]']*1.E3, df_full['Transmission'], linewidth=0.2)
+    plt.xlim(650, 800)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('plots/wavelength_sif.png', transparent=True)
+
+    plt.show()
