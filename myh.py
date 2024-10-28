@@ -7,7 +7,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from kittpeak import proccess_kittpeak_data
 
-COLOR = 'white'
+COLOR = 'black'
 mpl.rcParams['text.color'] = COLOR
 mpl.rcParams['axes.labelcolor'] = COLOR
 mpl.rcParams['xtick.color'] = COLOR
@@ -56,15 +56,5 @@ if __name__ == "__main__":
     plt.grid(True)
     plt.tight_layout()
     plt.savefig('plots/wavelength_3_5-4_5.png', transparent=True)
-
-    plt.close('all')
-
-    print('creating plots/wavelength_sif.png ...')
-    fig = plt.figure()
-    plt.plot(df_full['Wavelength [um]']*1.E3, df_full['Transmission'], linewidth=0.2)
-    plt.xlim(650, 800)
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig('plots/wavelength_sif.png', transparent=True)
 
     plt.show()
